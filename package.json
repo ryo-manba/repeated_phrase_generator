@@ -24,6 +24,7 @@
   "dependencies": {
     "@eduardoac-skimlinks/webext-redux": "3.0.1-release-candidate",
     "@emotion/react": "^11.11.1",
+    "@extend-chrome/storage": "^1.5.0",
     "@mantine/core": "^6.0.16",
     "@mantine/hooks": "^6.0.16",
     "@reduxjs/toolkit": "^1.9.5",
