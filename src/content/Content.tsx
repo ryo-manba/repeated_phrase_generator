@@ -1,11 +1,85 @@
-import { Counter } from '../app/features/counter';
+import React, { useState } from 'react';
+import { MdDone, MdOutlineContentCopy, MdVolumeUp } from 'react-icons/md';
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  CopyButton,
+  Divider,
+  Flex,
+  Group,
+  Select,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core';
+import { useClickOutside } from '@mantine/hooks';
 
-const Content = () => {
-  return (
-    <div className="fixed z-[999] bottom-2 right-2 shadow-xl border-[1px] bg-white bg-opacity-10">
-      <div className="flex justify-center mt-2 text-base">Content Counter</div>
-      <Counter />
-    </div>
+export type ContentProps = {
+  generatedText: string;
+  originalText: string;
+  targetStyle: string;
+};
+
+const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => {
+  const [opened, setOpened] = useState(true);
+  const [diaglog, setDialog] = useState<HTMLDivElement | null>(null);
+  // 1.
+  useClickOutside(() => setOpened(false), null, [diaglog]);
+  // 2.
+  const IconUrl = chrome.runtime.getURL('images/extension_128.png');
+
+  return opened ? (
+    <Box
+      sx={(theme) => ({
+        backgroundColor: 'white',
+        textAlign: 'left',
+        padding: theme.spacing.md,
+        borderRadius: theme.radius.md,
+        maxWidth: 400,
+        boxShadow: '0 0 10px rgba(0,0,0,.3);',
+        zIndex: 2147483550,
+      })}
+      component="div"
+      ref={setDialog}
+    >
+      <Flex pb="xs" gap="xs" justify="flex-start" align="center">
+        <Avatar src={IconUrl} />
+        <Text size="md">変換後：</Text>
+        <Select
+          value={targetStyle}
+          size="xs"
+          data={[
+            { value: 'hiragana', label: 'ひらがな' },
+            { value: 'katakana', label: 'カタカナ' },
+          ]}
+        />
+      </Flex>
+      <Divider />
+      <Stack pt="sm" spacing="xs" style={{ textAlign: 'left' }}>
+        <Text size="sm">{generatedText}</Text>
+        <Group position="right" spacing="xs">
+          {/* 3. */}
+          <Tooltip label="音声読み上げ" withArrow>
+            <ActionIcon>
+              <MdVolumeUp />
+            </ActionIcon>
+          </Tooltip>
+          {/* 4. */}
+          <CopyButton value={generatedText}>
+            {({ copied, copy }) => (
+              <Tooltip label={copied ? 'コピーしました' : 'クリップボードにコピー'} withArrow>
+                <ActionIcon onClick={copy}>
+                  {copied ? <MdDone /> : <MdOutlineContentCopy />}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </CopyButton>
+        </Group>
+      </Stack>
+    </Box>
+  ) : (
+    <></>
   );
 };
 
