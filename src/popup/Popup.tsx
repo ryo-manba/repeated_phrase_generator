@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Select } from '@mantine/core';
 import { getBucket } from '@extend-chrome/storage';
 

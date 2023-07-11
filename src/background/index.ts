@@ -17,3 +17,23 @@ browser.runtime.onInstalled.addListener(async (details) => {
     await browser.tabs.create({ url });
   }
 });
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'generation',
+    title: '選択したテキストを変換',
+    contexts: ['selection'],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (tab !== undefined) {
+    switch (info.menuItemId) {
+      case 'generation':
+        console.log(info.selectionText);
+        break;
+    }
+  }
+});
+
+export {};
