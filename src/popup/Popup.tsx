@@ -3,7 +3,7 @@ import { Container, Select } from '@mantine/core';
 import { getBucket } from '@extend-chrome/storage';
 
 interface MyBucket {
-  targetLang: string;
+  targetStyle: string;
 }
 
 const bucket = getBucket<MyBucket>('my_bucket', 'sync');
@@ -17,14 +17,14 @@ const Popup = () => {
   useEffect(() => {
     (async () => {
       const value = await bucket.get();
-      if (value.targetLang) {
-        setStyle(value.targetLang);
+      if (value.targetStyle) {
+        setStyle(value.targetStyle);
       }
     })();
   }, []);
 
   const saveStyle = (style: string) => {
-    bucket.set({ targetLang: style });
+    bucket.set({ targetStyle: style });
     setStyle(style);
   };
 

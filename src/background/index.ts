@@ -1,5 +1,8 @@
 import browser from 'webextension-polyfill';
 import store, { initializeWrappedStore } from '../app/store';
+import { getBucket } from '@extend-chrome/storage';
+import { generateRepeatedPhrase } from '../app/generate';
+import type { ConvertType } from '../app/generate';
 
 initializeWrappedStore();
 
@@ -18,6 +21,12 @@ browser.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
+interface MyBucket {
+  targetStyle: string;
+}
+
+const bucket = getBucket<MyBucket>('my_bucket', 'sync');
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'generation',
@@ -29,9 +38,15 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (tab !== undefined) {
     switch (info.menuItemId) {
-      case 'generation':
-        console.log(info.selectionText);
+      case 'generation': {
+        const selectedText = info.selectionText !== undefined ? info.selectionText : '';
+        // 選択したスタイルを取得する
+        const value = await bucket.get();
+        const userTargetStyle = value.targetStyle ?? 'hiragana';
+        const translatedText = generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);
+        console.log(translatedText);
         break;
+      }
     }
   }
 });
