@@ -1,13 +1,20 @@
-import { Counter } from '../app/features/counter';
+import { Container, Select } from '@mantine/core';
 
 const Popup = () => {
-  document.body.className = 'w-[30rem] h-[10rem]';
+  document.body.style.width = '20rem';
+  document.body.style.height = '20rem';
 
   return (
-    <>
-      <div className="flex justify-center mt-2 text-base">Popup Counter</div>
-      <Counter />
-    </>
+    <Container p="xl">
+      <Select
+        label="どのスタイルに変換しますか？"
+        defaultValue="hiragana"
+        data={[
+          { value: 'hiragana', label: 'ひらがな' },
+          { value: 'katakana', label: 'カタカナ' },
+        ]}
+      />
+    </Container>
   );
 };
 
