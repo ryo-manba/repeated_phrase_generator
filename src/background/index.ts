@@ -49,7 +49,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
       try {
         // コンテンツスクリプトにメッセージを送信する
-        await chrome.tabs.sendMessage(tab.id as number, {
+        const res = await chrome.tabs.sendMessage(tab.id as number, {
           type: 'SHOW',
           data: {
             style: userTargetStyle,
@@ -57,6 +57,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             originalText: selectedText,
           },
         });
+        if (res != undefined) {
+          console.error('error', res);
+        }
       } catch (error) {
         console.error('error', error);
       }

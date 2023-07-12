@@ -15,7 +15,7 @@ import {
 } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
 
-export type ContentProps = {
+type ContentProps = {
   generatedText: string;
   originalText: string;
   targetStyle: string;
@@ -24,12 +24,14 @@ export type ContentProps = {
 const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => {
   const [opened, setOpened] = useState(true);
   const [diaglog, setDialog] = useState<HTMLDivElement | null>(null);
-  // 1.
+
+  //  外部クリックが行われた場合にダイアログを閉じるためのフックを使用する
   useClickOutside(() => setOpened(false), null, [diaglog]);
-  // 2.
+
   const IconUrl = chrome.runtime.getURL('images/extension_128.png');
 
-  return opened ? (
+  if (!opened) return null;
+  return (
     <Box
       sx={(theme) => ({
         backgroundColor: 'white',
@@ -45,7 +47,7 @@ const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => 
     >
       <Flex pb="xs" gap="xs" justify="flex-start" align="center">
         <Avatar src={IconUrl} />
-        <Text size="md">変換後：</Text>
+        <Text size="md">変換結果：</Text>
         <Select
           value={targetStyle}
           size="xs"
@@ -59,13 +61,13 @@ const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => 
       <Stack pt="sm" spacing="xs" style={{ textAlign: 'left' }}>
         <Text size="sm">{generatedText}</Text>
         <Group position="right" spacing="xs">
-          {/* 3. */}
+          {/* 音声読み上げアイコンを表示する（未実装） */}
           <Tooltip label="音声読み上げ" withArrow>
             <ActionIcon>
               <MdVolumeUp />
             </ActionIcon>
           </Tooltip>
-          {/* 4. */}
+          {/* テキストをコピーするボタンを表示する */}
           <CopyButton value={generatedText}>
             {({ copied, copy }) => (
               <Tooltip label={copied ? 'コピーしました' : 'クリップボードにコピー'} withArrow>
@@ -78,8 +80,6 @@ const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => 
         </Group>
       </Stack>
     </Box>
-  ) : (
-    <></>
   );
 };
 
