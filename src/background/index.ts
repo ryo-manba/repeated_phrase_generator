@@ -35,36 +35,49 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// テキストを生成し、生成されたテキストをコンテンツスクリプトにメッセージとして送信
+const generateAndSendMessage = async (selectedText: string, targetTabId: number) => {
+  const value = await bucket.get();
+  const userTargetStyle = value.targetStyle ?? 'hiragana';
+  const generatedText = await generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);
+
+  try {
+    // コンテンツスクリプトにメッセージを送信する
+    const res = await chrome.tabs.sendMessage(targetTabId, {
+      type: 'SHOW',
+      data: {
+        style: userTargetStyle,
+        generatedText: generatedText,
+        originalText: selectedText,
+      },
+    });
+    if (res != undefined) {
+      console.error('error', res);
+    }
+  } catch (error) {
+    console.error('error', error);
+  }
+};
+
+// コンテキストメニューがクリックされたときのイベントリスナー
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (tab === undefined) {
     return;
   }
-  switch (info.menuItemId) {
-    case 'generation': {
-      const selectedText = info.selectionText ?? '';
-      // 選択したスタイルを取得する
-      const value = await bucket.get();
-      const userTargetStyle = value.targetStyle ?? 'hiragana';
-      const generatedText = generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);
+  if (info.menuItemId === 'generation') {
+    const selectedText = info.selectionText ?? '';
+    await generateAndSendMessage(selectedText, tab.id as number);
+  }
+});
 
-      try {
-        // コンテンツスクリプトにメッセージを送信する
-        const res = await chrome.tabs.sendMessage(tab.id as number, {
-          type: 'SHOW',
-          data: {
-            style: userTargetStyle,
-            generatedText: generatedText,
-            originalText: selectedText,
-          },
-        });
-        if (res != undefined) {
-          console.error('error', res);
-        }
-      } catch (error) {
-        console.error('error', error);
-      }
-      break;
-    }
+// コンテンツスクリプトからのメッセージを受け取る
+chrome.runtime.onMessage.addListener(async (message, sender) => {
+  if (message.type !== 'GENERATE') {
+    return;
+  }
+  const selectedText = message.data.selectionText ?? '';
+  if (sender.tab?.id) {
+    await generateAndSendMessage(selectedText, sender.tab?.id);
   }
 });
 

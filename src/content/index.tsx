@@ -10,6 +10,20 @@ type Props = {
 };
 
 const Icon = ({ selectedText, orect }: { selectedText: string; orect: DOMRect }) => {
+  // アイコンをクリックしたらアイコンの要素を削除し、メッセージをサービスワーカーに向けて送信する
+  const handleClick = async () => {
+    const existingElements = Array.from(document.getElementsByTagName('my-extension-root-icon'));
+    for (const element of existingElements) {
+      element.remove();
+    }
+    chrome.runtime.sendMessage({
+      type: 'GENERATE',
+      data: {
+        selectionText: selectedText,
+      },
+    });
+  };
+
   return (
     <div
       style={{
@@ -38,6 +52,7 @@ const Icon = ({ selectedText, orect }: { selectedText: string; orect: DOMRect })
               boxShadow: '0 0 10px rgba(0,0,0,.3);',
               zIndex: 2147483550,
             }}
+            onClick={handleClick}
           >
             <div
               style={{
@@ -85,6 +100,14 @@ const Main = ({ orect, generatedText, originalText, targetStyle }: Props) => {
   );
 };
 
+// 特定のタグを全て削除する関数
+const removeExistingElements = (tagName: string) => {
+  const existingElements = Array.from(document.getElementsByTagName(tagName));
+  for (const element of existingElements) {
+    element.remove();
+  }
+};
+
 // "onMessage"リスナーを設定する。
 // 他のパーツ（バックグラウンドスクリプトなど）からのメッセージを待ち受ける
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -108,9 +131,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   }
 
   // 既に拡張機能の要素がページに存在する場合は削除する
-  if (document.getElementsByTagName('my-extension-root').length > 0) {
-    document.getElementsByTagName('my-extension-root')[0].remove();
-  }
+  removeExistingElements('my-extension-root');
+
   const container = document.createElement('my-extension-root');
   document.body.after(container);
 
@@ -128,7 +150,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
 // ユーザーがテキストを選択したときのイベントを監視する
 document.addEventListener('mouseup', () => {
-  console.log('mouseup');
   const selection = window.getSelection();
 
   // 何も選択されていないか、空文字列の場合は何もしない
@@ -144,11 +165,7 @@ document.addEventListener('mouseup', () => {
   const oRange = selection.getRangeAt(0);
   const oRect = oRange.getBoundingClientRect();
 
-  // すでに存在する 'my-extension-root' タグを全て削除する
-  const existingElements = Array.from(document.getElementsByTagName('my-extension-root'));
-  for (const element of existingElements) {
-    element.remove();
-  }
+  removeExistingElements('my-extension-root');
 
   const container = document.createElement('my-extension-root-icon');
   document.body.after(container);
