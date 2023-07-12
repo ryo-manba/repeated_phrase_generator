@@ -1,5 +1,3 @@
-// import 'webextension-polyfill';
-// import 'construct-style-sheets-polyfill';
 import { createRoot } from 'react-dom/client';
 import Content from './Content';
 import type { ContentProps } from './Content';
@@ -33,13 +31,22 @@ const Main = ({ generatedText, originalText, targetStyle }: ContentProps) => {
   );
 };
 
-const container = document.createElement('my-extension-root');
-document.body.after(container);
-createRoot(container).render(
-  // ダイアログのサンプル表示
-  <Main
-    generatedText={'ここに翻訳したテキストが入る'}
-    originalText={'ここに翻訳前のテキストが入る'}
-    targetStyle={'hiragana'}
-  />
-);
+// メッセージを受信した場合にダイアログを表示する
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  if (message.type === 'SHOW') {
+    if (document.getElementsByTagName('my-extension-root').length > 0) {
+      document.getElementsByTagName('my-extension-root')[0].remove();
+    }
+    const container = document.createElement('my-extension-root');
+    document.body.after(container);
+    if ('data' in message && message.data) {
+      createRoot(container).render(
+        <Main
+          generatedText={message.data.generatedText?.toString() ?? 'aaa'}
+          originalText={message.data.originalText?.toString() ?? 'bbb'}
+          targetStyle={message.data.style?.toString() ?? 'ccc'}
+        />
+      );
+    }
+  }
+});

@@ -36,17 +36,31 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (tab !== undefined) {
-    switch (info.menuItemId) {
-      case 'generation': {
-        const selectedText = info.selectionText !== undefined ? info.selectionText : '';
-        // 選択したスタイルを取得する
-        const value = await bucket.get();
-        const userTargetStyle = value.targetStyle ?? 'hiragana';
-        const translatedText = generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);
-        console.log(translatedText);
-        break;
+  if (tab === undefined) {
+    return;
+  }
+  switch (info.menuItemId) {
+    case 'generation': {
+      const selectedText = info.selectionText ?? '';
+      // 選択したスタイルを取得する
+      const value = await bucket.get();
+      const userTargetStyle = value.targetStyle ?? 'hiragana';
+      const generatedText = generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);
+
+      try {
+        // コンテンツスクリプトにメッセージを送信する
+        await chrome.tabs.sendMessage(tab.id as number, {
+          type: 'SHOW',
+          data: {
+            style: userTargetStyle,
+            generatedText: generatedText,
+            originalText: selectedText,
+          },
+        });
+      } catch (error) {
+        console.error('error', error);
       }
+      break;
     }
   }
 });
