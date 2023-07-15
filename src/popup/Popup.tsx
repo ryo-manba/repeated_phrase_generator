@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Container, Select } from '@mantine/core';
-import { getBucket } from '@extend-chrome/storage';
-
-interface MyBucket {
-  targetStyle: string;
-}
-
-const bucket = getBucket<MyBucket>('my_bucket', 'sync');
+import { getStyleConfigBucket } from '../app/storage';
 
 const Popup = () => {
   document.body.style.width = '20rem';
-  document.body.style.height = '20rem';
+  document.body.style.height = '15rem';
+  const bucket = getStyleConfigBucket();
 
   const [style, setStyle] = useState('hiragana');
 
@@ -21,7 +16,7 @@ const Popup = () => {
         setStyle(value.targetStyle);
       }
     })();
-  }, []);
+  }, [bucket]);
 
   const saveStyle = (style: string) => {
     bucket.set({ targetStyle: style });

@@ -2,20 +2,15 @@ import { createRoot } from 'react-dom/client';
 import { Content } from './Content';
 import { ActionIcon, Image, Tooltip } from '@mantine/core';
 
-type Props = {
-  orect: DOMRect;
-  generatedText: string;
-  originalText: string;
-  targetStyle: string;
+type IconProps = {
+  selectedText: string;
+  rect: DOMRect;
 };
 
-const Icon = ({ selectedText, orect }: { selectedText: string; orect: DOMRect }) => {
+const Icon = ({ selectedText, rect }: IconProps) => {
   // アイコンをクリックしたらアイコンの要素を削除し、メッセージをサービスワーカーに向けて送信する
   const handleClick = async () => {
-    const existingElements = Array.from(document.getElementsByTagName('my-extension-root-icon'));
-    for (const element of existingElements) {
-      element.remove();
-    }
+    removeExistingElements('repeated-phrase-generator-icon');
     chrome.runtime.sendMessage({
       type: 'GENERATE',
       data: {
@@ -34,12 +29,11 @@ const Icon = ({ selectedText, orect }: { selectedText: string; orect: DOMRect })
         zIndex: 2147483550,
       }}
     >
-      {/* スクロール量を取得しているためダイアログが選択範囲に追従する */}
       <div
         style={{
           position: 'absolute',
-          left: window.scrollX + orect.left,
-          top: window.scrollY + orect.bottom + 10,
+          left: window.scrollX + rect.left,
+          top: window.scrollY + rect.bottom + 10,
           zIndex: 2147483550,
         }}
       >
@@ -70,7 +64,14 @@ const Icon = ({ selectedText, orect }: { selectedText: string; orect: DOMRect })
   );
 };
 
-const Main = ({ orect, generatedText, originalText, targetStyle }: Props) => {
+type Props = {
+  rect: DOMRect;
+  generatedText: string;
+  originalText: string;
+  targetStyle: string;
+};
+
+const Main = ({ rect, generatedText, originalText, targetStyle }: Props) => {
   return (
     <div
       style={{
@@ -85,8 +86,8 @@ const Main = ({ orect, generatedText, originalText, targetStyle }: Props) => {
       <div
         style={{
           position: 'absolute',
-          left: window.scrollX + orect.left,
-          top: window.scrollY + orect.bottom + 10,
+          left: window.scrollX + rect.left,
+          top: window.scrollY + rect.bottom + 10,
           zIndex: 2147483550,
         }}
       >
@@ -100,14 +101,6 @@ const Main = ({ orect, generatedText, originalText, targetStyle }: Props) => {
   );
 };
 
-// 特定のタグを全て削除する関数
-const removeExistingElements = (tagName: string) => {
-  const existingElements = Array.from(document.getElementsByTagName(tagName));
-  for (const element of existingElements) {
-    element.remove();
-  }
-};
-
 // "onMessage"リスナーを設定する。
 // 他のパーツ（バックグラウンドスクリプトなど）からのメッセージを待ち受ける
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
@@ -115,31 +108,26 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     return;
   }
 
-  // 現在の選択範囲を取得する
+  // 選択範囲を取得する
   const selection = window.getSelection();
-
-  // 選択範囲が存在しない、または空の場合は処理しない
   if (selection == null || selection.toString().length === 0) {
     return;
   }
 
   // 選択範囲の位置と大きさを取得する
-  const oRange = selection.getRangeAt(0);
-  const oRect = oRange.getBoundingClientRect();
-  if (selection.toString().length === 0) {
-    return;
-  }
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
 
   // 既に拡張機能の要素がページに存在する場合は削除する
-  removeExistingElements('my-extension-root');
+  removeExistingElements('repeated-phrase-generator');
 
-  const container = document.createElement('my-extension-root');
+  const container = document.createElement('repeated-phrase-generator');
   document.body.after(container);
 
   if ('data' in message && message.data) {
     createRoot(container).render(
       <Main
-        orect={oRect}
+        rect={rect}
         generatedText={message.data.generatedText?.toString() ?? ''}
         originalText={message.data.originalText?.toString() ?? ''}
         targetStyle={message.data.style?.toString() ?? ''}
@@ -152,24 +140,33 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 document.addEventListener('mouseup', () => {
   const selection = window.getSelection();
 
-  // 何も選択されていないか、空文字列の場合は何もしない
   if (selection == null || selection.toString().length === 0) {
+    // 選択範囲が存在しないか空の場合はアイコンを表示から削除する
+    removeExistingElements('repeated-phrase-generator-icon');
     return;
   }
-  // すでに'my-extension-root-icon' タグが存在する場合は何もしない
-  if (document.getElementsByTagName('my-extension-root-icon').length > 0) {
+  if (document.getElementsByTagName('repeated-phrase-generator-icon').length > 0) {
     return;
   }
 
   // 選択範囲の位置と大きさを取得する
-  const oRange = selection.getRangeAt(0);
-  const oRect = oRange.getBoundingClientRect();
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
 
-  removeExistingElements('my-extension-root');
+  removeExistingElements('repeated-phrase-generator');
 
-  const container = document.createElement('my-extension-root-icon');
+  const container = document.createElement('repeated-phrase-generator-icon');
   document.body.after(container);
 
   const selectedText = selection.toString();
-  createRoot(container).render(<Icon selectedText={selectedText} orect={oRect} />);
+
+  createRoot(container).render(<Icon selectedText={selectedText} rect={rect} />);
 });
+
+// 特定のタグを持つ要素を全ての要素を削除する
+const removeExistingElements = (tagName: string) => {
+  const existingElements = Array.from(document.getElementsByTagName(tagName));
+  for (const element of existingElements) {
+    element.remove();
+  }
+};

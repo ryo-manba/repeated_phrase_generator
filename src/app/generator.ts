@@ -1,7 +1,5 @@
 import { toHiragana, toKatakana } from 'wanakana';
 
-// TODO: redux関連のpackageを消す
-// 変換関数をここに入れる
 export type ConvertType = 'hiragana' | 'katakana';
 
 /**
@@ -16,7 +14,6 @@ export const generateRepeatedPhrase = (text: string, type: ConvertType): string 
   // TODO: 漢字の対応する
   let firstTwoChars = text.slice(0, 2);
 
-  // typeに応じて、最初の文字を変換
   switch (type) {
     case 'hiragana':
       firstTwoChars = toHiragana(firstTwoChars);

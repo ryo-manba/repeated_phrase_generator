@@ -1,22 +1,6 @@
-import browser from 'webextension-polyfill';
-import { getBucket } from '@extend-chrome/storage';
 import { generateRepeatedPhrase } from '../app/generator';
 import type { ConvertType } from '../app/generator';
-
-// show welcome page on new install
-browser.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === 'install') {
-    //show the welcome page
-    const url = browser.runtime.getURL('welcome/welcome.html');
-    await browser.tabs.create({ url });
-  }
-});
-
-interface MyBucket {
-  targetStyle: string;
-}
-
-const bucket = getBucket<MyBucket>('my_bucket', 'sync');
+import { getStyleConfigBucket } from '../app/storage';
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -28,6 +12,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // テキストを生成し、生成されたテキストをコンテンツスクリプトにメッセージとして送信
 const generateAndSendMessage = async (selectedText: string, targetTabId: number) => {
+  const bucket = getStyleConfigBucket();
   const value = await bucket.get();
   const userTargetStyle = value.targetStyle ?? 'hiragana';
   const generatedText = await generateRepeatedPhrase(selectedText, userTargetStyle as ConvertType);

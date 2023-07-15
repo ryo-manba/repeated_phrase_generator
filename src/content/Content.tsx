@@ -3,15 +3,9 @@ import { Avatar, Box, Divider, Flex, Stack, Text } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
 import { generateRepeatedPhrase } from '../app/generator';
 import type { ConvertType } from '../app/generator';
-import { getBucket } from '@extend-chrome/storage';
 import { StyleSelect } from './components/StyleSelect';
 import { TextActions } from './components/TextActions';
-
-interface MyBucket {
-  targetStyle: string;
-}
-
-const bucket = getBucket<MyBucket>('my_bucket', 'sync');
+import { getStyleConfigBucket } from '../app/storage';
 
 type ContentProps = {
   generatedText: string;
@@ -20,6 +14,7 @@ type ContentProps = {
 };
 
 export const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => {
+  const bucket = getStyleConfigBucket();
   const [opened, setOpened] = useState(true);
   const [diaglog, setDialog] = useState<HTMLDivElement | null>(null);
   const [text, setText] = useState(generatedText);
