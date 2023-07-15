@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill';
 import { getBucket } from '@extend-chrome/storage';
-import { generateRepeatedPhrase } from '../app/generate';
-import type { ConvertType } from '../app/generate';
+import { generateRepeatedPhrase } from '../app/generator';
+import type { ConvertType } from '../app/generator';
 
 // show welcome page on new install
 browser.runtime.onInstalled.addListener(async (details) => {

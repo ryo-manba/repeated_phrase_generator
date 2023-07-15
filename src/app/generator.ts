@@ -1,5 +1,6 @@
 import { toHiragana, toKatakana } from 'wanakana';
 
+// TODO: redux関連のpackageを消す
 // 変換関数をここに入れる
 export type ConvertType = 'hiragana' | 'katakana';
 

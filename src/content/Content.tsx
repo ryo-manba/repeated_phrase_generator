@@ -1,22 +1,11 @@
 import { useState } from 'react';
-import { MdDone, MdOutlineContentCopy, MdVolumeUp } from 'react-icons/md';
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  CopyButton,
-  Divider,
-  Flex,
-  Group,
-  Select,
-  Stack,
-  Text,
-  Tooltip,
-} from '@mantine/core';
+import { Avatar, Box, Divider, Flex, Stack, Text } from '@mantine/core';
 import { useClickOutside } from '@mantine/hooks';
-import { generateRepeatedPhrase } from '../app/generate';
-import type { ConvertType } from '../app/generate';
+import { generateRepeatedPhrase } from '../app/generator';
+import type { ConvertType } from '../app/generator';
 import { getBucket } from '@extend-chrome/storage';
+import { StyleSelect } from './components/StyleSelect';
+import { TextActions } from './components/TextActions';
 
 interface MyBucket {
   targetStyle: string;
@@ -30,7 +19,7 @@ type ContentProps = {
   targetStyle: string;
 };
 
-const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => {
+export const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => {
   const [opened, setOpened] = useState(true);
   const [diaglog, setDialog] = useState<HTMLDivElement | null>(null);
   const [text, setText] = useState(generatedText);
@@ -67,40 +56,13 @@ const Content = ({ generatedText, originalText, targetStyle }: ContentProps) => 
       <Flex pb="xs" gap="xs" justify="flex-start" align="center">
         <Avatar src={IconUrl} />
         <Text size="md">変換結果：</Text>
-        <Select
-          value={style}
-          onChange={(value: string) => handleChange(value)}
-          size="xs"
-          data={[
-            { value: 'hiragana', label: 'ひらがな' },
-            { value: 'katakana', label: 'カタカナ' },
-          ]}
-        />
+        <StyleSelect value={style} onChange={handleChange} />
       </Flex>
       <Divider />
       <Stack pt="sm" spacing="xs" style={{ textAlign: 'left' }}>
         <Text size="sm">{text}</Text>
-        <Group position="right" spacing="xs">
-          {/* 音声読み上げアイコンを表示する（未実装） */}
-          <Tooltip label="音声読み上げ" withArrow>
-            <ActionIcon>
-              <MdVolumeUp />
-            </ActionIcon>
-          </Tooltip>
-          {/* テキストをコピーするボタンを表示する */}
-          <CopyButton value={text}>
-            {({ copied, copy }) => (
-              <Tooltip label={copied ? 'コピーしました' : 'クリップボードにコピー'} withArrow>
-                <ActionIcon onClick={copy}>
-                  {copied ? <MdDone /> : <MdOutlineContentCopy />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-        </Group>
+        <TextActions text={text} />
       </Stack>
     </Box>
   );
 };
-
-export default Content;

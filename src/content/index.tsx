@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import Content from './Content';
+import { Content } from './Content';
 import { ActionIcon, Image, Tooltip } from '@mantine/core';
 
 type Props = {
