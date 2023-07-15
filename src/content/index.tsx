@@ -153,8 +153,6 @@ document.addEventListener('mouseup', () => {
   const range = selection.getRangeAt(0);
   const rect = range.getBoundingClientRect();
 
-  removeExistingElements('repeated-phrase-generator');
-
   const container = document.createElement('repeated-phrase-generator-icon');
   document.body.after(container);
 
