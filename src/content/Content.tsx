@@ -28,8 +28,7 @@ export const Content = ({ generatedText, originalText, targetStyle }: ContentPro
   //  外部クリックが行われた場合にダイアログを閉じるためのフックを使用する
   useClickOutside(() => setOpened(false), null, [diaglog]);
 
-  // TODO: iconを作成する
-  const IconUrl = chrome.runtime.getURL('images/extension_128.png');
+  const iconUrl = chrome.runtime.getURL('images/extension_128.png');
 
   const handleChange = async (value: string) => {
     bucket.set({ targetStyle: value });
@@ -54,7 +53,7 @@ export const Content = ({ generatedText, originalText, targetStyle }: ContentPro
       ref={setDialog}
     >
       <Flex pb="xs" gap="xs" justify="flex-start" align="center">
-        <Avatar src={IconUrl} />
+        <Avatar src={iconUrl} />
         <Text size="md">変換結果：</Text>
         <StyleSelect value={style} onChange={handleChange} />
       </Flex>

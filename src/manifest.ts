@@ -7,7 +7,7 @@ import { version } from '../package.json';
 
 const manifest = defineManifest(async (env) => ({
   manifest_version: 3,
-  name: `${env.mode === 'development' ? '[Dev] ' : ''}Browser Extension TypeScript & React Starter`,
+  name: `${env.mode === 'development' ? '[Dev] ' : ''}Repeated Phrase Generator`,
   description: 'Browser Extension, TypeScript, React',
   version,
   background: {
