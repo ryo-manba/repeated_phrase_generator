@@ -1,11 +1,20 @@
 import { render, screen } from '@testing-library/react';
-// import store from '../app/store';
 import { Content } from './Content';
 
-describe('content', () => {
-  test('renders content example', () => {
-    // TODO: 変更する
-    render(<Content generatedText="" originalText="" targetStyle="" />);
-    // expect(screen.getByText('Content Counter')).toBeInTheDocument();
+describe('Content', () => {
+  it('renders the generated text', () => {
+    const generatedText = 'Generated Text';
+    const originalText = 'Original Text';
+    const targetStyle = 'hiragana';
+    render(
+      <Content
+        generatedText={generatedText}
+        originalText={originalText}
+        targetStyle={targetStyle}
+      />
+    );
+
+    const generatedTextElement = screen.getByText(generatedText);
+    expect(generatedTextElement).toBeInTheDocument();
   });
 });

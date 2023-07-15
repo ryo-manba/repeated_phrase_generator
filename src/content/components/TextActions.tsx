@@ -9,14 +9,16 @@ type TextActionsProps = {
 export const TextActions = ({ text }: TextActionsProps) => (
   <Group position="right" spacing="xs">
     <Tooltip label="音声読み上げ" withArrow>
-      <ActionIcon>
+      <ActionIcon aria-label="Volume Icon">
         <MdVolumeUp />
       </ActionIcon>
     </Tooltip>
     <CopyButton value={text}>
       {({ copied, copy }) => (
         <Tooltip label={copied ? 'コピーしました' : 'クリップボードにコピー'} withArrow>
-          <ActionIcon onClick={copy}>{copied ? <MdDone /> : <MdOutlineContentCopy />}</ActionIcon>
+          <ActionIcon onClick={copy} aria-label="Copy Icon">
+            {copied ? <MdDone /> : <MdOutlineContentCopy />}
+          </ActionIcon>
         </Tooltip>
       )}
     </CopyButton>

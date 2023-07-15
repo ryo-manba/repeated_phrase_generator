@@ -50,7 +50,7 @@ export const Content = ({ generatedText, originalText, targetStyle }: ContentPro
       <Flex pb="xs" gap="xs" justify="flex-start" align="center">
         <Avatar src={iconUrl} />
         <Text size="md">変換結果：</Text>
-        <StyleSelect value={style} onChange={handleChange} />
+        <StyleSelect value={style} onChange={handleChange} aria-label="Style Select" />
       </Flex>
       <Divider />
       <Stack pt="sm" spacing="xs" style={{ textAlign: 'left' }}>

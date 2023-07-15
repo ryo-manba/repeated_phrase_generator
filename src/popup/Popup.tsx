@@ -3,8 +3,10 @@ import { Container, Select } from '@mantine/core';
 import { getStyleConfigBucket } from '../app/storage';
 
 const Popup = () => {
+  // ポップアップウインドウのサイズを設定
   document.body.style.width = '20rem';
   document.body.style.height = '15rem';
+
   const bucket = getStyleConfigBucket();
 
   const [style, setStyle] = useState('hiragana');
@@ -27,6 +29,7 @@ const Popup = () => {
     <Container p="xl">
       <Select
         label="どのスタイルに変換しますか？"
+        aria-label="Style Select"
         value={style}
         onChange={(value: string) => saveStyle(value)}
         data={[

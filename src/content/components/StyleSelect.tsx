@@ -7,6 +7,7 @@ type StyleSelectProps = {
 
 export const StyleSelect = ({ value, onChange }: StyleSelectProps) => (
   <Select
+    aria-label="Style Select"
     value={value}
     onChange={onChange}
     size="xs"
