@@ -103,7 +103,7 @@ const Main = ({ rect, generatedText, originalText, targetStyle }: Props) => {
 
 // "onMessage"リスナーを設定する。
 // 他のパーツ（バックグラウンドスクリプトなど）からのメッセージを待ち受ける
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message) {
   if (message.type !== 'SHOW') {
     return;
   }
