@@ -1,16 +1,7 @@
 import browser from 'webextension-polyfill';
-import store, { initializeWrappedStore } from '../app/store';
 import { getBucket } from '@extend-chrome/storage';
 import { generateRepeatedPhrase } from '../app/generate';
 import type { ConvertType } from '../app/generate';
-
-initializeWrappedStore();
-
-store.subscribe(() => {
-  // access store state
-  // const state = store.getState();
-  // console.log('state', state);
-});
 
 // show welcome page on new install
 browser.runtime.onInstalled.addListener(async (details) => {
