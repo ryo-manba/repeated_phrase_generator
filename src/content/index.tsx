@@ -55,7 +55,7 @@ const Icon = ({ selectedText, rect }: IconProps) => {
                 zIndex: 2147483550,
               }}
             >
-              <Image src={chrome.runtime.getURL('images/extension_128.png')} />
+              <Image src={chrome.runtime.getURL('images/icon-128.png')} />
             </div>
           </ActionIcon>
         </Tooltip>

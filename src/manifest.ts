@@ -8,7 +8,8 @@ import { version } from '../package.json';
 const manifest = defineManifest(async (env) => ({
   manifest_version: 3,
   name: `${env.mode === 'development' ? '[Dev] ' : ''}Repeated Phrase Generator`,
-  description: 'Browser Extension, TypeScript, React',
+  description: 'Generates repeated phrases.',
+  homepage_url: 'https://github.com/ryo-manba/repeated_phrase_generator',
   version,
   background: {
     service_worker: 'background/index.ts',
@@ -22,24 +23,24 @@ const manifest = defineManifest(async (env) => ({
   host_permissions: ['<all_urls>'],
   web_accessible_resources: [
     {
-      resources: [],
+      resources: ['images/icon-128.png'],
       matches: ['<all_urls>'],
     },
   ],
   action: {
     default_popup: 'popup/popup.html',
     default_icon: {
-      '16': 'images/extension_16.png',
-      '32': 'images/extension_32.png',
-      '48': 'images/extension_48.png',
-      '128': 'images/extension_128.png',
+      '16': 'images/icon-16.png',
+      '32': 'images/icon-32.png',
+      '48': 'images/icon-48.png',
+      '128': 'images/icon-128.png',
     },
   },
   icons: {
-    '16': 'images/extension_16.png',
-    '32': 'images/extension_32.png',
-    '48': 'images/extension_48.png',
-    '128': 'images/extension_128.png',
+    '16': 'images/icon-16.png',
+    '32': 'images/icon-32.png',
+    '48': 'images/icon-48.png',
+    '128': 'images/icon-128.png',
   },
   permissions: ['storage', 'tabs', 'contextMenus'],
 }));

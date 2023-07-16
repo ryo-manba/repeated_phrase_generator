@@ -1,6 +1,6 @@
 # Repeated Phrase Generator
 
-![Repeated Phrase Generator Logo](public/images/logo.png)
+![Repeated Phrase Generator Logo](docs/logo.png)
 
 Repeated Phrase Generator は、選択したテキストを特定の形式「〇〇の〇〇」に変換する Chrome 拡張機能です。
 音声読み上げ機能とコピー機能を備えており、変換形式はひらがなとカタカナがあります。

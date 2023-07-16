@@ -23,7 +23,7 @@ export const Content = ({ generatedText, originalText, targetStyle }: ContentPro
   //  外部クリックが行われた場合にダイアログを閉じるためのフックを使用する
   useClickOutside(() => setOpened(false), null, [diaglog]);
 
-  const iconUrl = chrome.runtime.getURL('images/extension_128.png');
+  const iconUrl = chrome.runtime.getURL('images/icon-128.png');
 
   const handleChange = async (value: string) => {
     bucket.set({ targetStyle: value });
