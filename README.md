@@ -22,4 +22,4 @@ Repeated Phrase Generator は、選択したテキストを特定の形式「〇
 
 ## Demo
 
-![Demo Video](docs/demo.mov)
+![Demo Gif](https://github.com/ryo-manba/repeated_phrase_generator/assets/76232929/1c432328-ee99-452d-934c-68f9b10b4271)
