@@ -8,7 +8,7 @@ import { version } from '../package.json';
 const manifest = defineManifest(async (env) => ({
   manifest_version: 3,
   name: `${env.mode === 'development' ? '[Dev] ' : ''}Repeated Phrase Generator`,
-  description: 'Generates repeated phrases.',
+  description: '〇〇の〇〇という文字列を生成するChrome拡張です。',
   homepage_url: 'https://github.com/ryo-manba/repeated_phrase_generator',
   version,
   background: {
