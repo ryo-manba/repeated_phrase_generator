@@ -12,7 +12,7 @@ Repeated Phrase Generator は、選択したテキストを特定の形式「〇
 1. [リリースページ](https://github.com/ryo-manba/repeated_phrase_generator/releases)から最新の `repeated-phrase-generator-v{バージョン}.zip` をダウンロードし、ローカルで展開します。
 2. Google Chrome のアドレスバーに chrome://extensions と入力して拡張機能のページにアクセスします。
 3. 右上のデベロッパーモードをオンにします。
-4. `パッケージ化されていない拡張機能を読み込む`をクリックし、1 で展開したしたフォルダを選択します。
+4. `パッケージ化されていない拡張機能を読み込む`をクリックし、1 で展開したフォルダを選択します。
 
 ## 使い方
 
